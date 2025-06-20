@@ -22,7 +22,7 @@ export class UsersService {
     return created.save();
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<UserDocument | null> {
     return this.model.findOne({ email }).exec();
   }
 
