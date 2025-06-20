@@ -6,9 +6,15 @@ import { QuestionsModule } from './questions/questions.module';
 import { ResponsesModule } from './responses/responses.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CommonModule } from './common/common.module';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     AuthModule,
     UsersModule,
     SurveysModule,
@@ -16,6 +22,7 @@ import { CommonModule } from './common/common.module';
     ResponsesModule,
     AnalyticsModule,
     CommonModule,
+    DatabaseModule,
   ],
   controllers: [],
   providers: [],
