@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
@@ -11,6 +11,11 @@ export class UsersService {
   constructor(@InjectModel(User.name) private model: Model<UserDocument>) {}
 
   async create(dto: CreateUserDto): Promise<User> {
+    const existing = await this.model.findOne({ email: dto.email });
+
+    if (existing)
+      throw new ConflictException('User with this email already exists');
+
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const created = new this.model({ ...dto, password: hashedPassword });
 
