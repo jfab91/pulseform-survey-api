@@ -9,6 +9,7 @@ import { UserDocument } from '../users/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { sanitizeUser } from '../users/helpers/user.helper';
 import { UserResponseDto } from '../users/dto';
+import { Errors } from '../common/errors';
 
 @Injectable()
 export class AuthService {
@@ -20,10 +21,10 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<UserDocument> {
     const user = await this.usersService.findByEmail(email);
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException(Errors.USER.NOT_FOUND);
 
     if (!(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(Errors.AUTH.INVALID_CREDENTIALS);
     }
 
     return user;
