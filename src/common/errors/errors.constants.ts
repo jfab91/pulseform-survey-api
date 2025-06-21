@@ -9,6 +9,8 @@ export const Errors = {
   },
   SURVEY: {
     NOT_FOUND: 'Survey not found',
+    INACTIVE: 'Survey is not active',
+    EXPIRED: 'Survey has expired',
   },
   QUESTION: {
     NOT_FOUND: 'Question not found',

@@ -10,5 +10,6 @@ import { SurveysController } from './surveys.controller';
   ],
   providers: [SurveysService],
   controllers: [SurveysController],
+  exports: [SurveysService],
 })
 export class SurveysModule {}

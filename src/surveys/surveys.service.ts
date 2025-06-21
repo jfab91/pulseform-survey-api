@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 import { Survey, SurveyDocument } from './schemas/survey.schema';
 import { CreateSurveyDto } from './dto';
 import { UserDocument } from '../users/schemas/user.schema';
+import { Errors } from '../common/errors';
 
 @Injectable()
 export class SurveysService {
@@ -17,5 +19,13 @@ export class SurveysService {
 
   async findAllByUser(userId: string): Promise<Survey[]> {
     return this.model.find({ owner: userId }).exec();
+  }
+
+  async findById(id: string): Promise<SurveyDocument> {
+    const survey = await this.model.findById(id).exec();
+
+    if (!survey) throw new NotFoundException(Errors.SURVEY.NOT_FOUND);
+
+    return survey;
   }
 }
