@@ -46,7 +46,7 @@ export class ResponsesService {
     return response.save();
   }
 
-  async findBySurvey(surveyId: string): Promise<Response[]> {
+  async findBySurvey(surveyId: string): Promise<ResponseDocument[]> {
     return this.model
       .find({ survey: surveyId })
       .populate('respondent', 'email')

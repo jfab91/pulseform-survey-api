@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 
 import { Survey } from '../../surveys/schemas/survey.schema';
 import { User } from '../../users/schemas/user.schema';
@@ -7,7 +7,7 @@ import { User } from '../../users/schemas/user.schema';
 export type ResponseDocument = HydratedDocument<Response>;
 
 export class Answer {
-  questionId: mongoose.Schema.Types.ObjectId;
+  questionId: Types.ObjectId;
   value: string | number | boolean;
 }
 

@@ -21,7 +21,7 @@ export class QuestionsService {
   async findBySurvey(
     surveyId: string,
     opts?: { lean: boolean },
-  ): Promise<Question[] | QuestionDocument> {
+  ): Promise<Question[] | QuestionDocument[]> {
     const query = this.model.find({ survey: surveyId });
 
     if (opts?.lean) query.lean();
