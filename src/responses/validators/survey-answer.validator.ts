@@ -32,20 +32,19 @@ export class SurveyAnswerValidator {
     },
   };
 
-  static validateAnswers(
+  public static validateAnswers(
+    answers: AnswerDto[],
+    questions: QuestionDocument[],
+  ): void {
+    this.validateTypes(answers, questions);
+    this.validateRequired(answers, questions);
+  }
+
+  private static validateTypes(
     answers: AnswerDto[],
     questions: QuestionDocument[],
   ): void {
     const questionMap = new Map(questions.map((q) => [q._id.toString(), q]));
-
-    for (const question of questions) {
-      const wasAnswered = answers.some(
-        (answer) => answer.questionId === question._id.toString(),
-      );
-
-      if (question.required && !wasAnswered)
-        throw new BadRequestException(`Question ${question.text} is required`);
-    }
 
     for (const answer of answers) {
       const question = questionMap.get(answer.questionId);
@@ -61,6 +60,20 @@ export class SurveyAnswerValidator {
       }
 
       validator(answer.value, question);
+    }
+  }
+
+  private static validateRequired(
+    answers: AnswerDto[],
+    questions: QuestionDocument[],
+  ): void {
+    for (const question of questions) {
+      const wasAnswered = answers.some(
+        (answer) => answer.questionId === question._id.toString(),
+      );
+
+      if (question.required && !wasAnswered)
+        throw new BadRequestException(`Question ${question.text} is required`);
     }
   }
 }
