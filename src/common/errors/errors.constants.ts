@@ -16,4 +16,7 @@ export const Errors = {
     NOT_FOUND: 'Question not found',
     UNSUPPORTED_TYPE: 'Unsupported question type',
   },
+  RESPONSE: {
+    NOT_FOUND: 'Response not found',
+  },
 };

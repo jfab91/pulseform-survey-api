@@ -45,4 +45,27 @@ export class ResponsesService {
 
     return response.save();
   }
+
+  async findBySurvey(surveyId: string): Promise<Response[]> {
+    return this.model
+      .find({ survey: surveyId })
+      .populate('respondent', 'email')
+      .lean()
+      .exec();
+  }
+
+  async findOneBySurvey(
+    surveyId: string,
+    responseId: string,
+  ): Promise<Response> {
+    const response = await this.model
+      .findOne({ _id: responseId, survey: surveyId })
+      .populate('respondent', 'email')
+      .lean()
+      .exec();
+
+    if (!response) throw new BadRequestException(Errors.RESPONSE.NOT_FOUND);
+
+    return response;
+  }
 }
