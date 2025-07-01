@@ -1,10 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Response, ResponseDocument } from './schemas/response.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { SurveysService } from '../surveys/surveys.service';
 import { CreateResponseDto } from './dto';
-import { UserDocument } from '../users/schemas/user.schema';
 import { Errors } from '../common/errors';
 import { isSurveyExpired } from './helpers/survey.helpers';
 import { QuestionsService } from '../questions/questions.service';
@@ -23,7 +26,7 @@ export class ResponsesService {
   async submit(
     surveyId: string,
     dto: CreateResponseDto,
-    user?: UserDocument,
+    respondent: { sessionId: string; userId?: string },
   ): Promise<Response> {
     const survey = await this.surveysService.findById(surveyId);
     const questions = (await this.questionsService.findBySurvey(
@@ -37,10 +40,19 @@ export class ResponsesService {
 
     SurveyAnswerValidator.validateAnswers(dto.answers, questions);
 
+    const filter = respondent.userId
+      ? { survey: survey._id, user: respondent.userId }
+      : { survey: survey._id, respondentSessionId: respondent.sessionId };
+
+    const exists = await this.model.exists(filter);
+
+    if (exists) throw new ConflictException(Errors.RESPONSE.ALREADY_SUBMITTED);
+
     const response = new this.model({
       survey: survey._id,
-      respondent: user ? user._id : null,
       answers: dto.answers,
+      respondent: respondent.userId,
+      respondentSessionId: respondent.sessionId,
     });
 
     return response.save();

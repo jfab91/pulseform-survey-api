@@ -6,6 +6,7 @@ export const Errors = {
   AUTH: {
     INVALID_CREDENTIALS: 'Invalid credentials',
     UNAUTHORIZED: 'Unauthorized access',
+    SESSION_ID_REQUIRED: 'Session ID is required',
   },
   SURVEY: {
     NOT_FOUND: 'Survey not found',
@@ -18,5 +19,6 @@ export const Errors = {
   },
   RESPONSE: {
     NOT_FOUND: 'Response not found',
+    ALREADY_SUBMITTED: 'Response already submitted for this survey',
   },
 };

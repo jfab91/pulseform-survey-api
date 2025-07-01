@@ -14,6 +14,8 @@ import { Survey } from './schemas/survey.schema';
 import { CreateSurveyDto } from './dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../users/enums';
+import { User } from '../common/decorators';
+import { User as UserEntity } from '../users/schemas/user.schema';
 
 @Controller('surveys')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -22,12 +24,15 @@ export class SurveysController {
 
   @Post()
   @Roles(UserRole.ADMIN, UserRole.CREATOR)
-  async create(@Body() dto: CreateSurveyDto, @Request() req): Promise<Survey> {
-    return this.service.create(dto, req.user);
+  async create(
+    @User() user: UserEntity & { _id: string },
+    @Body() dto: CreateSurveyDto,
+  ): Promise<Survey> {
+    return this.service.create(dto, user);
   }
 
   @Get()
-  async findSurveysByUser(@Request() req) {
-    return this.service.findAllByUser(req.user.id);
+  async findSurveysByUser(@User() user: UserEntity & { _id: string }) {
+    return this.service.findAllByUser(user._id);
   }
 }

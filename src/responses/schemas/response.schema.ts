@@ -24,6 +24,9 @@ export class Response {
     required: true,
   })
   answers: Answer[];
+
+  @Prop({ required: false, index: true })
+  respondentSessionId?: string;
 }
 
 export const ResponseSchema = SchemaFactory.createForClass(Response);

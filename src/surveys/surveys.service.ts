@@ -4,14 +4,17 @@ import { Model } from 'mongoose';
 
 import { Survey, SurveyDocument } from './schemas/survey.schema';
 import { CreateSurveyDto } from './dto';
-import { UserDocument } from '../users/schemas/user.schema';
+import { User } from '../users/schemas/user.schema';
 import { Errors } from '../common/errors';
 
 @Injectable()
 export class SurveysService {
   constructor(@InjectModel(Survey.name) private model: Model<SurveyDocument>) {}
 
-  async create(dto: CreateSurveyDto, user: UserDocument): Promise<Survey> {
+  async create(
+    dto: CreateSurveyDto,
+    user: User & { _id: string },
+  ): Promise<Survey> {
     const created = new this.model({ ...dto, owner: user._id });
 
     return created.save();

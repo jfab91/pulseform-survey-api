@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -12,6 +13,9 @@ import { Response } from './schemas/response.schema';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../users/enums';
+import { SessionId, User } from '../common/decorators';
+import { User as UserEntity } from '../users/schemas/user.schema';
+import { Errors } from '../common/errors';
 
 @UseGuards(JwtAuthGuard)
 @Controller('responses')
@@ -36,8 +40,12 @@ export class ResponsesController {
   async submitResponse(
     @Param('surveyId') surveyId: string,
     @Body() dto: CreateResponseDto,
-    @Request() req,
+    @User() user?: UserEntity & { _id: string },
+    @SessionId() sessionId?: string,
   ): Promise<Response> {
-    return this.service.submit(surveyId, dto, req.user);
+    if (!sessionId)
+      throw new BadRequestException(Errors.AUTH.SESSION_ID_REQUIRED);
+
+    return this.service.submit(surveyId, dto, { userId: user?._id, sessionId });
   }
 }
