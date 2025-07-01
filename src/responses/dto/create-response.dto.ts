@@ -1,12 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsMongoId, ValidateNested } from 'class-validator';
+import { IsArray, ValidateNested } from 'class-validator';
 
-class AnswerDto {
-  @IsMongoId()
-  questionId: string;
-
-  value: any;
-}
+import { AnswerDto } from './answer.dto';
 
 export class CreateResponseDto {
   @IsArray()

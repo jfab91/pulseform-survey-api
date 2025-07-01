@@ -18,8 +18,15 @@ export class QuestionsService {
     return question.save();
   }
 
-  async findBySurvey(surveyId: string): Promise<Question[]> {
-    return this.model.find({ survey: surveyId }).exec();
+  async findBySurvey(
+    surveyId: string,
+    opts?: { lean: boolean },
+  ): Promise<Question[] | QuestionDocument> {
+    const query = this.model.find({ survey: surveyId });
+
+    if (opts?.lean) query.lean();
+
+    return query.exec();
   }
 
   async update(questionId: string, dto: UpdateQuestionDto): Promise<Question> {
