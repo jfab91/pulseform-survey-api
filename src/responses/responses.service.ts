@@ -26,7 +26,7 @@ export class ResponsesService {
   async submit(
     surveyId: string,
     dto: CreateResponseDto,
-    respondent: { sessionId: string; userId?: string },
+    respondent: { sessionId?: string; userId?: string },
   ): Promise<Response> {
     const survey = await this.surveysService.findById(surveyId);
     const questions = (await this.questionsService.findBySurvey(
