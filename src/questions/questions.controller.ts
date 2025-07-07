@@ -24,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { QuestionResponseDto } from './dto/responses';
 
-@ApiTags('Surveys')
+@ApiTags('Questions')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('surveys/:surveyId/questions')
 export class QuestionsController {
