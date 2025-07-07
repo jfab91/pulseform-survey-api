@@ -10,12 +10,6 @@ async function bootstrap() {
     .setDescription('API documentation for Pulseform Survey')
     .setVersion('1.0')
     .addBearerAuth()
-    .addGlobalParameters({
-      name: 'X-Session-Id',
-      in: 'header',
-      required: true,
-      description: 'Session ID for tracking user sessions',
-    })
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
