@@ -24,11 +24,29 @@ export class SurveysService {
     return this.model.find({ owner: userId }).exec();
   }
 
+  async findOneByUser(surveyId: string, userId: string): Promise<Survey> {
+    const survey = await this.model
+      .findOne({ _id: surveyId, owner: userId })
+      .exec();
+
+    if (!survey) throw new NotFoundException(Errors.SURVEY.NOT_FOUND);
+
+    return survey;
+  }
+
   async findById(id: string): Promise<SurveyDocument> {
     const survey = await this.model.findById(id).exec();
 
     if (!survey) throw new NotFoundException(Errors.SURVEY.NOT_FOUND);
 
     return survey;
+  }
+
+  async delete(id: string): Promise<void> {
+    const result = await this.model.deleteOne({ _id: id }).exec();
+
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(Errors.SURVEY.NOT_FOUND);
+    }
   }
 }
